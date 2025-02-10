@@ -67,3 +67,15 @@ app.post("/user", async (req, res) => {
 app.listen(port, () => {
     console.log(`app running on ${port}`)
 });
+
+app.get("/users", async (req, res) => {
+  const { userid } = req.query;
+
+  if (!userid) {
+    res.json({ success: false, message: "userid required" });
+  }
+
+  const users = await User.findOne({ _id: { $eq: userid } });
+
+  res.json({ success: true, data: { users } });
+});
