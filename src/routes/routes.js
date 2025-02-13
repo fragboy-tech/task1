@@ -22,20 +22,20 @@ try {
 }
 });
 route.post("/post", async (req, res) => {
-//     try {
-//       await Post.create({
-//         caption: " ",
-//         imageUrl: "https://www.facebook.com/photo/?fbid=8934128586619770&set=a.150985821600801" ,
-//         user: "Munkhjin",
-//         likes:[" "],
-//         comments:[" "],
-//         createdAt: new Date('1982-06-01'),
-//         updatedAt: new Date('2025-04-30'),
-//       });
-//       res.send("success");
-//     } catch (e) {
-//       res.send(`error: ${e.message}`);
-//     }
+    try {
+      await Post.create({
+        caption: " ",
+        imageUrl: "https://www.facebook.com/photo/?fbid=8934128586619770&set=a.150985821600801" ,
+        user: "Munkhjin",
+        likes:[" "],
+        comments:[" "],
+        createdAt: new Date('1982-06-01'),
+        updatedAt: new Date('2025-04-30'),
+      });
+      res.send("success");
+    } catch (e) {
+      res.send(`error: ${e.message}`);
+    }
   });
   route.post("/comment", async (req, res) => {
     try{
@@ -48,9 +48,9 @@ route.post("/post", async (req, res) => {
     }catch (e) {
         res.send(`error: ${e.message}`);
     }
-  });
+});
 
-  route.get("/users", async (req, res) => {
+route.get("/users", async (req, res) => {
   const { userid } = req.query;
 
   if (!userid) {
@@ -85,6 +85,18 @@ route.post("/follow", async (req, res) =>{
   
     const users = await User.updateOne({_id:{$eq: userid}}, {$push : {followers: userName}});
     res.json({ success: true, users});
-  });
+});
 
-export {route}
+route.get("/followers", async (req, res) => {
+  const { userid } = req.query;
+
+  if (!userid) {
+    res.json({ success: false, message: "userid required" });
+  }
+
+  const users = await User.findOne({ _id: { $eq: userid } });
+
+  res.json({ success: true, data:  users.followers });
+});
+ 
+export {route};
